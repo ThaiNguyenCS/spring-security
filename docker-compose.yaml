@@ -1,0 +1,14 @@
+services:
+  demo_db:
+    image: postgres:latest
+    container_name: demo_db
+    ports:
+        - "5433:5432"
+    environment:
+        POSTGRES_USER: demo
+        POSTGRES_PASSWORD: demo
+        POSTGRES_DB: demo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
