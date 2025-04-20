@@ -44,12 +44,12 @@ public class SecurityConfig {
         // authorize requests
         http.csrf().disable(); // disable csrf for testing
         http.authorizeHttpRequests(request -> {
+            request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // allow preflight requests for all endpoints (IMPORTANT)
             request.requestMatchers("/").permitAll();
             request.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
             request.anyRequest().authenticated();
         });
-        http.cors(Customizer.withDefaults()); // enable cors
-        http.httpBasic(Customizer.withDefaults()); // enable authentication by username + password
+//        http.httpBasic(Customizer.withDefaults()); // enable authentication by username + password
         // add jwtFilter before username + password auth to check if client is using token for authentication
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -57,7 +57,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager (AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
