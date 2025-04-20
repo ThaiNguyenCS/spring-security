@@ -48,6 +48,7 @@ public class SecurityConfig {
             request.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
             request.anyRequest().authenticated();
         });
+        http.cors(Customizer.withDefaults()); // enable cors
         http.httpBasic(Customizer.withDefaults()); // enable authentication by username + password
         // add jwtFilter before username + password auth to check if client is using token for authentication
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
