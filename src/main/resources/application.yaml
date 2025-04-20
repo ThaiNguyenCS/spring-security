@@ -6,7 +6,11 @@ spring:
     password: demo
   jpa:
     hibernate:
-      ddl-auto: 'create-drop'
+      ddl-auto: 'update'
 
 server:
   port: 8080
+
+
+jwt:
+  secret: ${JWT_SECRET}
