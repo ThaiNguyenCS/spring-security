@@ -38,6 +38,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder encoder;
     private final JwtFilter jwtFilter;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,10 +47,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests(request -> {
             request.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // allow preflight requests for all endpoints (IMPORTANT)
             request.requestMatchers("/").permitAll();
+            request.requestMatchers("/login/**").permitAll();
             request.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
             request.anyRequest().authenticated();
         });
-//        http.httpBasic(Customizer.withDefaults()); // enable authentication by username + password
+        http.oauth2Login(oauth -> oauth.successHandler(customOAuth2SuccessHandler)); // enable oauth2 login
         // add jwtFilter before username + password auth to check if client is using token for authentication
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
